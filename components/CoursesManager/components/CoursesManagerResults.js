@@ -1,3 +1,4 @@
+import React from 'react';
 import {gql} from 'react-apollo';
 import {Table, Glyphicon, Button, Panel} from 'react-bootstrap';
 import {apolloClient} from '../../../api/graphql/apolloClient.js';
@@ -10,6 +11,9 @@ const deleteMutation = gql`
 
 
 const maybeDelete = (id, cb) => {
+	if (process.env.NODE_ENV == 'test'){
+		return cb();
+	}
 	const swal = require('sweetalert2');
 	swal({
 		title: 'Are you sure?',
@@ -25,7 +29,7 @@ const maybeDelete = (id, cb) => {
 	}).catch(swal.noop);
 };
 
-const CoursesManagerResultsRow = ({id, subject, courseNumber, description, cb}) => (
+export const CoursesManagerResultsRow = ({id, subject, courseNumber, description, cb}) => (
 	<tr>
 		<td style={{verticalAlign: 'middle'}}>
 			<strong>{subject} {courseNumber}:</strong> {description}
