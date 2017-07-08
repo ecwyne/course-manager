@@ -1,54 +1,50 @@
-import {graphql, gql} from 'react-apollo';
+import {gql} from 'react-apollo';
 import {Table, Glyphicon, Button, Panel} from 'react-bootstrap';
-import {compose, pure, branch, renderComponent, mapProps} from 'recompose';
-import {path} from 'ramda';
+import {apolloClient} from '../../../api/graphql/apolloClient.js';
 
-const data = graphql(gql`
-	query Search($query: String!){
-	  searchCourseDescription(query: $query){
-	    id
-	    subject
-	    courseNumber
-	    description
-	  }
+const deleteMutation = gql`
+	mutation DeleteCourse($id: Int!){
+	  deleteCourse(id: $id)
 	}
-`, {
-	options: props => ({
-		variables: {query: props.query}
-	})
-});
+`;
 
-const Loading = () => <span>Loading...</span>;
-const displayLoadingState = branch(path(['data', 'loading']), renderComponent(Loading));
 
-const CoursesManagerResultsRow = ({id, subject, courseNumber, description}) => (
-	<tr key={id}>
-		<td>
+const maybeDelete = (id, cb) => {
+	const swal = require('sweetalert2');
+	swal({
+		title: 'Are you sure?',
+		text: 'You won\'t be able to revert this!',
+		type: 'warning',
+		showCancelButton: true,
+		confirmButtonText: 'Yes, delete it!',
+		reverseButtons: true,
+		showLoaderOnConfirm: true,
+		preConfirm: () => apolloClient.mutate({mutation: deleteMutation, variables: {id}, refetchQueries: ['Search']}).then(() => cb())
+	}).then(() => {
+		swal('Deleted!', 'Course has been deleted',	'success');
+	}).catch(swal.noop);
+};
+
+const CoursesManagerResultsRow = ({id, subject, courseNumber, description, cb}) => (
+	<tr>
+		<td style={{verticalAlign: 'middle'}}>
 			<strong>{subject} {courseNumber}:</strong> {description}
 		</td>
 		<td>
-			<Button bsStyle="danger" title="Delete course" onClick={() => console.log('clicked', id)}>
+			<Button bsStyle="danger" title="Delete course" onClick={() => maybeDelete(id, cb)}>
 				<Glyphicon glyph="trash" />
 			</Button>
 		</td>
 	</tr>
 );
 
-const enhance = compose(
-	data,
-	displayLoadingState,
-	mapProps(({data: d}) => ({arr: d.searchCourseDescription})),
-	pure
-);
-
-export const CoursesManagerResults = ({arr = []}) => (
-	<Panel header="Course Search Results">
-		<Table responsive bordered hover className="text-center">
+export default ({arr = [], runQuery}) => (
+	<Panel header={<h3>Course Search Results</h3>}>
+		<Table fill bordered hover className="text-center">
 			<tbody>
-				{arr.map(CoursesManagerResultsRow)}
+				{arr.map(e => <CoursesManagerResultsRow key={e.id} {...e} cb={runQuery}/>)}
 			</tbody>
 		</Table>
 	</Panel>
 );
 
-export default enhance(CoursesManagerResults);

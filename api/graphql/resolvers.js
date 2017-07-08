@@ -3,7 +3,7 @@ import {pick} from 'ramda';
 
 const Query = {
 	courseById: (root, {id}) => get(id),
-	searchCourseDescription: (root, {query: q}) => search(q)
+	searchCourseDescription: (root, {query: q}) => q.length >= 2 ? search(q) : []
 };
 
 const Mutation = {

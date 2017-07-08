@@ -1,19 +1,47 @@
-import {FormGroup, ControlLabel, FormControl, Modal, Button, HelpBlock} from 'react-bootstrap';
+import {FormGroup, ControlLabel, FormControl, Modal, Button, HelpBlock, Alert} from 'react-bootstrap';
 import {withState, withHandlers, compose} from 'recompose';
+import {gql} from 'react-apollo';
+import {apolloClient} from '../../../api/graphql/apolloClient.js';
 import R, {assoc} from 'ramda';
 
 const enhance = compose(
 	withState('modalShown', 'setModalShown', false),
+	withState('inFlight', 'setInFlight', false),
+	withState('errors', 'setErrors', []),
 	withState('fields', 'setFields', {subject: '', courseNumber: '', description: ''}),
 	withHandlers({
-		fieldHandler: ({setFields}) => field => e => setFields(assoc(field, e.target.value))
+		fieldHandler: ({setFields, setErrors}) => field => e => {
+			setFields(assoc(field, e.target.value));
+			setErrors([]);
+		}
 	})
 );
 
-export const CoursesManagerCreator = ({modalShown, setModalShown, fields, fieldHandler}) => {
+const mutation = gql`
+	mutation CreateCourse($course: CourseInput!){
+	  createCourse(course: $course){
+	    id
+	  }
+	}
+`;
+
+export const CoursesManagerCreator = ({modalShown, setModalShown, fields, fieldHandler, setInFlight, errors, setErrors, runQuery}) => {
 	const {subject, courseNumber, description} = fields;
 	const courseNumberValidationState = (courseNumber && !/\b\d\d\d\b/.test(courseNumber)) || ![0,3].includes(courseNumber.length) ? 'error' : null;
 	const disabled = Boolean(courseNumberValidationState) || Object.values(fields).some(R.equals(''));
+
+	const submit = async () => {
+		setInFlight(true);
+		try {
+			await apolloClient.mutate({mutation, variables: {course: fields}});
+			setInFlight(false);
+			setModalShown(false);
+			runQuery();
+		} catch (err){
+			setErrors(err.graphQLErrors.map(R.prop('message')));
+			console.log({err});
+		}
+	};
 	return (
 		<Button block bsStyle="success" onClick={() => setModalShown(true)}>
 			Add New Course
@@ -35,10 +63,11 @@ export const CoursesManagerCreator = ({modalShown, setModalShown, fields, fieldH
 						<ControlLabel>Course Description</ControlLabel>
 						<FormControl type="text" placeholder="Course Description" value={description} onChange={fieldHandler('description')}/>
 					</FormGroup>
+					{errors.map(msg => <Alert key={msg} bsStyle="warning">{msg}</Alert>)}
 				</Modal.Body>
 
 				<Modal.Footer>
-					<Button bsStyle="primary" onClick={() => console.log(fields)} disabled={disabled}>Submit</Button>
+					<Button bsStyle="primary" onClick={submit} disabled={disabled}>Submit</Button>
 				</Modal.Footer>
 			</Modal>
 		</Button>
