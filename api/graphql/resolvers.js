@@ -11,6 +11,8 @@ const Mutation = {
 		const duplicates = await query(pick(['subject', 'courseNumber'], course));
 		if (duplicates.length){
 			return new Error('Duplicate course found');
+		} else if (course.courseNumber.length != 3 || !/\d\d\d/.test(course.courseNumber)){
+			return new Error('Course Number must be a 3-dight, zero-padded number');
 		} else {
 			return insert(course);
 		}

@@ -6,6 +6,8 @@ import cors from 'cors';
 import {graphqlExpress, graphiqlExpress} from 'graphql-server-express';
 import schema from './api/graphql/schema.js';
 
+const PORT = process.env.PORT || 3000;
+
 // Dev mode?
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -33,11 +35,11 @@ app.prepare().then(() => {
 		return handle(req, res);
 	});
 
-	server.listen(3000, err => {
+	server.listen(PORT, err => {
 		if (err) {
 			throw err;
 		}
 
-		console.log('> Server running at http://localhost:3000');
+		console.log(`> Server running at http://localhost:${PORT}`);
 	});
 });
