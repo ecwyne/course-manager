@@ -2,7 +2,7 @@
 
 ## Install and Run
 ```bash
-git clone https://github.com/clewyne/course-manager.git
+git clone https://github.com/ecwyne/course-manager.git
 cd course-manager
 npm install
 npm start
@@ -15,22 +15,22 @@ npm run lint && npm test
 
 # Considerations
 ### View Layer
-I chose to use [next.js](https://github.com/zeit/next.js) because it provides "automatic code splitting, routing, hot code reloading and universal (server-side and client-side) rendering". These all make for faster iterations during development and dramatically faster time-to-interactive in production.
+I chose to use [next.js](https://github.com/zeit/next.js) because it provides "automatic code splitting, routing, hot code reloading, and universal (server-side and client-side) rendering." These all make for faster iterations during development and dramatically faster time-to-interactive in production.
 
 ### API Layer
-I chose [Apollo Graphql](http://dev.apollodata.com/) [client](http://dev.apollodata.com/react/) and [server](http://dev.apollodata.com/tools/) because it integrates beautifully with React applications; allowing components to define their data requirements exactly to avoid underfetching and overfetching. Apollo provides an intelligent client that facilitates query batching, optimistic ui, subscriptions and caching.
+I chose [Apollo Graphql](http://dev.apollodata.com/) [client](http://dev.apollodata.com/react/) and [server](http://dev.apollodata.com/tools/) because it integrates beautifully with React applications, allowing components to define their data requirements exactly to avoid underfetching and overfetching. Apollo provides an intelligent client that facilitates query batching, optimistic ui, subscriptions, and caching.
 
-ApolloClient uses Redux under the hood to manage application state and I used [recompose](https://github.com/acdlite/recompose) to manage component state. Recompose makes it easy to write nearly all application code using [functional stateless components](https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components) which are faster, __more testable__ and easier to reason about.
+ApolloClient uses Redux under the hood to manage application state and I used [recompose](https://github.com/acdlite/recompose) to manage component state. Recompose makes it easy to write nearly all application code using [functional stateless components](https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components) which are faster, __more testable__, and easier to reason about.
 
 ### Database Layer
-For this assignment I wanted a database that would not require `bradledford` to install any dependencies outside of what npm could offer. I also needed a querying language to search course descriptions (so a key-value store like redis wasn't a viable option)
+For this assignment I wanted a database that would not require `@bradledford` to install any dependencies outside of what npm could offer. I also needed a querying language to search course descriptions (so a key-value store like Redis wasn't a viable option.)
 
-I considered [nedb](https://github.com/louischatriot/nedb) (a mongo-like solution) and [sqlite3](https://github.com/mapbox/node-sqlite3) (a SQL-like solution). Both of them would have met my requirements technically. I ultimately chose to use sqlite3 because it sounds like most of Civitas' applications are running on SQL solutions today.
+I considered [nedb](https://github.com/louischatriot/nedb) (a mongo-like solution) and [sqlite3](https://github.com/mapbox/node-sqlite3) (a SQL-like solution.) Both of them would have met my requirements technically. I ultimately chose to use sqlite3 because it sounds like most of Civitas' applications are running on SQL solutions today.
 
-If this application were to go to production at a large scale I would likely choose to store the course details in [Redis](https://redis.io/) and do all full-text searching in [Elasticsearch](https://www.elastic.co/products/elasticsearch). Both of these would be optimized for exactly what they are doing. Redis is designed for fast retrieval of values by key and Elasticsearch is designed for searching through text.
+If this application were to go to production at a large scale I would likely choose to store the course details in [Redis](https://redis.io/) and do all full-text searching in [Elasticsearch](https://www.elastic.co/products/elasticsearch). Redis is designed for fast retrieval of values by key and Elasticsearch is designed for searching through text.
 
 ### Testing
-I chose [Jest](https://facebook.github.io/jest/) as the testing framework for this application. Other frameworks may have worked just as well in this particular case but I chose Jest for its ease of testing React components. I also used [Enzyme](http://airbnb.io/enzyme/) from airbnb for manipulating components during testing.
+I chose [Jest](https://facebook.github.io/jest/) as the testing framework for this application. Other frameworks may have worked just as well in this particular case but I chose Jest for its ease of testing React components. I also used [Enzyme](http://airbnb.io/enzyme/) from Airbnb for manipulating components during testing.
 
 # Assignment Parameters
 Develop simple Node.js application which manages Course records
