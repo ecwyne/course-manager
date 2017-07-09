@@ -26,58 +26,65 @@ const mutation = gql`
 	}
 `;
 
-export class CoursesManagerCreator extends React.PureComponent{
-	render() {
-		const {modalShown, setModalShown, fields = {}, fieldHandler, setInFlight, errors = [], setErrors, runQuery} = this.props;
-		const {subject = '', courseNumber = '', description = ''} = fields;
-		const courseNumberValidationState = (courseNumber && !/\b\d\d\d\b/.test(courseNumber)) || ![0,3].includes(courseNumber.length) ? 'error' : null;
-		const disabled = Boolean(courseNumberValidationState) || Object.values(fields).some(R.equals(''));
+export const CoursesManagerCreatorModal = ({fields, fieldHandler, errors = [], setInFlight, setModalShown, runQuery, setErrors}) => {
+	const {subject = '', courseNumber = '', description = ''} = fields;
+	const courseNumberValidationState = (courseNumber && !/\b\d\d\d\b/.test(courseNumber)) || ![0,3].includes(courseNumber.length) ? 'error' : null;
+	const disabled = Boolean(courseNumberValidationState) || Object.values(fields).some(R.equals(''));
 
-		const submit = async () => {
-			setInFlight(true);
-			try {
-				await apolloClient.mutate({mutation, variables: {course: fields}});
-				setInFlight(false);
-				setModalShown(false);
-				runQuery();
-			} catch (err){
-				setErrors(err.graphQLErrors.map(R.prop('message')));
-				console.log({err});
-			}
-		};
-		return (
-			<Button block bsStyle="success" onClick={() => setModalShown(true)}>
-				Add New Course
-				<Modal show={modalShown} onHide={() => setModalShown(false)}>
-					<div ref={ref => this.modalRef = ref}>
-						<Modal.Header closeButton>
-							<Modal.Title>Add New Course</Modal.Title>
-						</Modal.Header>
-						<Modal.Body>
-							<FormGroup controlId="subject">
-								<ControlLabel>Subject</ControlLabel>
-								<FormControl type="text" placeholder="Subject" value={subject} onChange={fieldHandler('subject')}/>
-							</FormGroup>
-							<FormGroup controlId="courseNumber" validationState={courseNumberValidationState}>
-								<ControlLabel>Course Number</ControlLabel>
-								<FormControl type="text" placeholder="Course Number" value={courseNumber} onChange={fieldHandler('courseNumber')}/>
-								<HelpBlock>Must be a zero-filled three digit number (eg. 033)</HelpBlock>
-							</FormGroup>
-							<FormGroup controlId="description">
-								<ControlLabel>Course Description</ControlLabel>
-								<FormControl type="text" placeholder="Course Description" value={description} onChange={fieldHandler('description')}/>
-							</FormGroup>
-							{errors.map(msg => <Alert key={msg} bsStyle="warning">{msg}</Alert>)}
-						</Modal.Body>
+	const submit = async () => {
+		setInFlight(true);
+		try {
+			await apolloClient.mutate({mutation, variables: {course: fields}});
+			setInFlight(false);
+			setModalShown(false);
+			runQuery();
+		} catch (err){
+			setErrors(err.graphQLErrors.map(R.prop('message')));
+			console.log({err});
+		}
+	};
 
-						<Modal.Footer>
-							<Button bsStyle="primary" onClick={submit} disabled={disabled}>Submit</Button>
-						</Modal.Footer>
-					</div>
-				</Modal>
-			</Button>
-		);
-	}
-}
+	return (
+		<div>
+			<Modal.Header closeButton>
+				<Modal.Title>Add New Course</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<FormGroup controlId="subject">
+					<ControlLabel>Subject</ControlLabel>
+					<FormControl type="text" placeholder="Subject" value={subject} onChange={fieldHandler('subject')}/>
+				</FormGroup>
+				<FormGroup controlId="courseNumber" validationState={courseNumberValidationState}>
+					<ControlLabel>Course Number</ControlLabel>
+					<FormControl type="text" placeholder="Course Number" value={courseNumber} onChange={fieldHandler('courseNumber')}/>
+					<HelpBlock>Must be a zero-filled three digit number (eg. 033)</HelpBlock>
+				</FormGroup>
+				<FormGroup controlId="description">
+					<ControlLabel>Course Description</ControlLabel>
+					<FormControl type="text" placeholder="Course Description" value={description} onChange={fieldHandler('description')}/>
+				</FormGroup>
+				{errors.map(msg => <Alert key={msg} bsStyle="warning">{msg}</Alert>)}
+			</Modal.Body>
+
+			<Modal.Footer>
+				<Button bsStyle="primary" onClick={submit} disabled={disabled}>Submit</Button>
+			</Modal.Footer>
+		</div>
+	);
+};
+
+export const CoursesManagerCreator = props => {
+	const {modalShown, setModalShown} = props;
+
+	return (
+		<Button block bsStyle="success" onClick={() => setModalShown(true)}>
+			Add New Course
+			<Modal show={modalShown} onHide={() => setModalShown(false)}>
+				<CoursesManagerCreatorModal {...props}/>
+			</Modal>
+		</Button>
+	);
+};
+
 
 export default enhance(CoursesManagerCreator);
