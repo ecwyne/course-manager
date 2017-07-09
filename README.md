@@ -34,13 +34,13 @@ I chose [Jest](https://facebook.github.io/jest/) as the testing framework for th
 
 # Assignment Parameters
 Develop simple Node.js application which manages Course records
-- [x] The application should manage the following information about a Course: id, subject, courseNumber, description. All fields other than id are strings
-- [x] courseNumber must be formatted as a three-digit, zero-padded integer like "033". Adding records which are not three-digit numbers results in an validation message to the user
-- [x] The application should allow user to search for a course by description, with partial matches like "Bio" would find "Introduction to Biology"
-- [x] The application should support deleting a Course
-- [x] The application should support inserting a new Course
-- [x] The application should prevent inserting duplicate courses, where subject and number must be unique
-- [x] The application must be started by just running `npm start` or otherwise described in a README.md
+- [x] The application should manage the following information about a Course: id, subject, courseNumber, description. [All fields other than id are strings](https://github.com/ecwyne/course-manager/blob/master/api/graphql/schema.js#L5-L10)
+- [x] courseNumber must be formatted as a three-digit, zero-padded integer like "033". Adding records which are not three-digit numbers results in an [validation message](https://github.com/ecwyne/course-manager/blob/master/components/CoursesManager/components/CoursesManagerCreator.js#L33) to the user [(test)](https://github.com/ecwyne/course-manager/blob/master/api/__tests__/schema.test.js#L70-L72)
+- [x] The application should allow user to [search for a course by description](https://github.com/ecwyne/course-manager/blob/master/api/data/coursesDb.js#L43-L46), with partial matches like "Bio" would find "Introduction to Biology" [(test)](https://github.com/ecwyne/course-manager/blob/master/api/__tests__/schema.test.js#L62-L64)
+- [x] The application should support [deleting a Course](https://github.com/ecwyne/course-manager/blob/master/api/data/coursesDb.js#L33-L36) [(test)](https://github.com/ecwyne/course-manager/blob/master/api/__tests__/schema.test.js#L74-L80)
+- [x] The application should support [inserting](https://github.com/ecwyne/course-manager/blob/master/api/data/coursesDb.js#L27-L31) a new Course [(test)](https://github.com/ecwyne/course-manager/blob/master/api/__tests__/schema.test.js#L54-L56)
+- [x] The application should [prevent inserting duplicate courses](https://github.com/ecwyne/course-manager/blob/master/api/graphql/resolvers.js#L13), where subject and number must be unique [(test)](https://github.com/ecwyne/course-manager/blob/master/api/__tests__/schema.test.js#L66-L68)
+- [x] The application must be started by just running [`npm start`](https://github.com/ecwyne/course-manager/blob/master/package.json#L8) or otherwise described in a README.md
 - [x] The application must be uploaded to Github and accessible to Github user `bradledford`
 - [x] The application will only be tested in Google Chrome
 
