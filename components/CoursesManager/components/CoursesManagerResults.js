@@ -46,7 +46,11 @@ export default ({arr = [], runQuery}) => (
 	<Panel header={<h3>Course Search Results</h3>}>
 		<Table fill bordered hover className="text-center">
 			<tbody>
-				{arr.map(e => <CoursesManagerResultsRow key={e.id} {...e} cb={runQuery}/>)}
+				{
+					arr.length ?
+						arr.map(e => <CoursesManagerResultsRow key={e.id} {...e} cb={runQuery}/>) :
+						<tr><td>No Results Found</td></tr>
+				}
 			</tbody>
 		</Table>
 	</Panel>
