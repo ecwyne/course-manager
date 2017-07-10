@@ -5,6 +5,7 @@
 git clone https://github.com/ecwyne/course-manager.git
 cd course-manager
 npm install
+npm run seed # optional - seeds ~2000 courses
 npm start
 ```
 
