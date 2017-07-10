@@ -8,7 +8,7 @@ const R = require('ramda');
 const arr = fs.readFileSync(path.resolve(__dirname, './seed-data.csv')).toString().split('\n');
 
 const courses = R.uniq(arr.map(str => {
-	const [subject, courseNumber, _, description] = str.split(',');
+	const [subject, courseNumber, _, description] = str.split(','); // eslint-disable-line
 	return {subject, courseNumber, description};
 }));
 
