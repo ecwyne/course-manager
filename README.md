@@ -14,6 +14,14 @@ npm start
 npm run lint && npm test
 ```
 
+## Example Queries/Mutations
+First start the server, then go to the following urls
+
+- [courseById](http://localhost:3000/graphiql?query=%7B%0A%20%20courseById(id%3A%20101)%7B%0A%20%20%20%20id%0A%20%20%20%20subject%0A%20%20%20%20description%0A%20%20%20%20courseNumber%0A%20%20%7D%0A%7D)
+- [searchCourseDescription](http://localhost:3000/graphiql?query=%7B%0A%20%20searchCourseDescription(query%3A%20%22BIO%22)%7B%0A%20%20%20%20id%0A%20%20%20%20description%0A%20%20%20%20subject%0A%20%20%20%20courseNumber%0A%20%20%7D%0A%7D)
+- [createCourse](http://localhost:3000/graphiql?query=mutation%20CreateCourse(%24course%3A%20CourseInput!)%7B%0A%20%20createCourse(course%3A%20%24course)%7B%0A%20%20%20%20id%0A%20%20%20%20subject%0A%20%20%20%20courseNumber%0A%20%20%20%20description%0A%20%20%7D%0A%7D&operationName=CreateCourse&variables=%7B%22course%22%3A%20%7B%22subject%22%3A%20%22BIO%22%2C%20%22courseNumber%22%3A%20%22111%22%2C%20%22description%22%3A%20%22Introduction%20to%20Biology%22%7D%7D)
+- [deleteCourse](http://localhost:3000/graphiql?query=mutation%20DeleteCourse(%24id%3A%20Int!)%7B%0A%20%20deleteCourse(id%3A%20%24id)%0A%7D&operationName=DeleteCourse&variables=%7B%22id%22%3A%2012%7D)
+
 # Considerations
 ### View Layer
 I chose to use [next.js](https://github.com/zeit/next.js) because it provides "automatic code splitting, routing, hot code reloading, and universal (server-side and client-side) rendering." These all make for faster iterations during development and dramatically faster time-to-interactive in production.
